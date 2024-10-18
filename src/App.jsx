@@ -22,27 +22,26 @@ export default function App() {
         setError('');
 
         try {
-            // Using the backend URL from environment variables
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}`);
-            setImages(response.data.images); // Scraped image URLs
-            setTitles(response.data.titles); 
+            setImages(response.data.images);
+            setTitles(response.data.titles);
             setPrices(response.data.prices);
-            setLinks(response.data.links); 
+            setLinks(response.data.links);
             setDescription(response.data.description);
         } catch (error) {
             console.error("Error fetching data:", error);
-            setError('Failed to load rooms :(');
+            setError(error.response?.data?.error || 'Failed to load rooms :(');
         } finally {
             setLoading(false);
         }
     };
 
     const handleFetch = () => {
-        if (location.trim()) {
-            fetchImages(location);
-        } else {
-            setError('Please enter a location.');
+        if (location.trim().length < 3) {
+            setError('Please enter a valid location (at least 3 characters).');
+            return;
         }
+        fetchImages(location);
     };
 
     return (
@@ -77,13 +76,13 @@ export default function App() {
             {!loading && images.length > 0 && (
                 <div className="flex flex-col items-start gap-4 mt-6">
                     {images.map((image, index) => (
-                        <div key={index} className="flex items-center w-full gap-4 p-5 bg-white rounded-xl">
+                        <div key={index} className="flex items-center w-full gap-4 p-5 bg-white shadow-md rounded-xl">
                             <a href={links[index]} target="_blank" rel="noopener noreferrer">
                                 <img src={image} alt={`Room ${index}`} className="rounded-lg shadow-lg w-28 h-28" />
                             </a>
                             <div className='flex flex-col'>
                                 <span className="text-black">{titles[index] || 'No title available'}</span>
-                                <span className="max-w-md text-xs leading-relaxed text-black break-words ">{description[index] || 'No description available'}</span>
+                                <span className="max-w-md text-xs leading-relaxed text-black break-words">{description[index] || 'No description available'}</span>
                                 <span className="text-black">{prices[index] || 'No price available'}</span>
                             </div> 
                         </div>
