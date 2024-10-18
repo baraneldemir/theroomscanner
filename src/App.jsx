@@ -23,7 +23,7 @@ export default function App() {
 
         try {
             // Using the backend URL from environment variables
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/.netlify/functions/scrape-images/${location}`);
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}`);
             setImages(response.data.images); // Scraped image URLs
             setTitles(response.data.titles); 
             setPrices(response.data.prices);
