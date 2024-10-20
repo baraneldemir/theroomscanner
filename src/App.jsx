@@ -6,7 +6,62 @@ export default function App() {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [location, setLocation] = useState('');
+    const [selectedCity, setSelectedCity] = useState('');
+
+    const cities = [
+        'London',
+        'Birmingham',
+        'Manchester',
+        'Glasgow',
+        'Liverpool',
+        'Newcastle',
+        'Sheffield',
+        'Bristol',
+        'Leeds',
+        'Cardiff',
+        'Nottingham',
+        'Coventry',
+        'Bradford',
+        'Belfast',
+        'Stoke-on-Trent',
+        'Wolverhampton',
+        'Sunderland',
+        'Portsmouth',
+        'Leicester',
+        'Aberdeen',
+        'Brighton',
+        'Plymouth',
+        'Derby',
+        'Swindon',
+        'Luton',
+        'Middlesbrough',
+        'Blackpool',
+        'Stockport',
+        'Bolton',
+        'York',
+        'Cambridge',
+        'Swansea',
+        'Dundee',
+        'Derry',
+        'Bournemouth',
+        'Exeter',
+        'Southampton',
+        'Inverness',
+        'Gloucester',
+        'Wakefield',
+        'Falkirk',
+        'Chester',
+        'St Albans',
+        'Slough',
+        'Aberdeen',
+        'Eastbourne',
+        'Lincoln',
+        'Hastings',
+        'Telford',
+        'Salisbury',
+        'Dunfermline',
+        'Belfast',
+    ];
 
     const fetchImages = async (location) => {
         setListings([]); // Reset listings on new fetch
@@ -25,23 +80,29 @@ export default function App() {
     };
 
     const handleFetch = () => {
-        if (location.trim().length < 3) {
-            setError('Please enter a valid location (at least 3 characters).');
+        if (!selectedCity) {
+            setError('Please select a valid city.');
             return;
         }
-        fetchImages(location);
+        fetchImages(selectedCity);
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-skyBack">
             <h1 className="mb-4 text-3xl font-bold text-white">RoomScanner</h1>
-            <input
-                type="text"
-                placeholder="Enter Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+
+            {/* Dropdown for selecting city */}
+            <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
                 className="w-full max-w-md p-2 mb-4 border border-gray-300 rounded-lg"
-            />
+            >
+                <option value="" disabled>Select a city</option>
+                {cities.map((city, index) => (
+                    <option key={index} value={city}>{city}</option>
+                ))}
+            </select>
+
             <button
                 onClick={handleFetch}
                 disabled={loading}
