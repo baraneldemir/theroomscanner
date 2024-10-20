@@ -155,6 +155,9 @@ export default function App() {
             {error && <p className="mt-4 text-red-500">{error}</p>}
 
             <div className="flex flex-col items-start gap-4 mt-6">
+                {listings.length === 0 && !loading && (
+                    <p className="text-red-500">No rooms found in that price range.</p> // Message when no listings are available
+                )}
                 {listings.map((listing, index) => (
                     <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
