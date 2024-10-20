@@ -81,8 +81,9 @@ export default function App() {
     };
 
     const handleFetch = () => {
-        if (!selectedCity) {
-            setError('Please select a valid city.');
+        // Check if selected city is valid
+        if (!selectedCity || !cities.includes(selectedCity)) {
+            setError('Please select a valid city from the dropdown.');
             return;
         }
         setListings([]); // Reset listings on new fetch
@@ -115,10 +116,12 @@ export default function App() {
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-skyBack">
             <h1 className="mb-4 text-3xl font-bold text-white">RoomScanner</h1>
 
+           
             {/* Input for selecting city */}
             <div className="relative w-full max-w-md mb-4">
                 <input
@@ -143,6 +146,7 @@ export default function App() {
                     </ul>
                 )}
             </div>
+
 
             <button
                 onClick={handleFetch}
