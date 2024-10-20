@@ -9,6 +9,8 @@ export default function App() {
     const [selectedCity, setSelectedCity] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredCities, setFilteredCities] = useState([]);
+    const [minPrice, setMinPrice] = useState(''); // New state for min price
+    const [maxPrice, setMaxPrice] = useState(''); // New state for max price
     const [expandedListings, setExpandedListings] = useState({}); // Tracks which listings are expanded
 
     const cities = [
@@ -36,9 +38,11 @@ export default function App() {
     const fetchImages = async (location, page) => {
         setLoading(true);
         setError('');
-
+    
         try {
-            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}/${page}`);
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}/${page}`, {
+                params: { minPrice, maxPrice } // Pass minPrice and maxPrice as query params
+            });
             setListings(prevListings => [...prevListings, ...response.data]); // Append new listings
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -49,20 +53,20 @@ export default function App() {
     };
 
     const handleFetch = () => {
-        // Check if selected city is valid
         if (!selectedCity || !cities.includes(selectedCity)) {
             setError('Please select a valid city from the dropdown.');
             return;
         }
-        setListings([]); // Reset listings on new fetch
-        setCurrentPage(1); // Reset page to 1 when fetching new city
-        fetchImages(selectedCity, 1);
+        // Reset listings only for a new search
+        setListings([]); 
+        // setCurrentPage(1); // Start from page 1 for a new city
+        fetchImages(selectedCity, 1); // Fetch the first page of data
     };
-
+    
     const handleLoadMore = () => {
         const nextPage = currentPage + 1; // Increment the current page
         setCurrentPage(nextPage);
-        fetchImages(selectedCity, nextPage);
+        fetchImages(selectedCity, nextPage); // Fetch the next page
     };
 
     const handleCityChange = (e) => {
@@ -88,7 +92,6 @@ export default function App() {
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
-    // Toggle the read more / read less for each listing
     const toggleReadMore = (index) => {
         setExpandedListings((prevState) => ({
             ...prevState,
@@ -109,13 +112,12 @@ export default function App() {
                     placeholder="Select a city"
                     className="w-full p-2 border border-gray-300 rounded-lg"
                 />
-                {/* Dropdown list for suggestions */}
                 {filteredCities.length > 0 && (
                     <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
                         {filteredCities.map((city, index) => (
-                            <li 
-                                key={index} 
-                                onClick={() => handleCitySelect(city)} 
+                            <li
+                                key={index}
+                                onClick={() => handleCitySelect(city)}
                                 className="p-2 cursor-pointer hover:bg-gray-200"
                             >
                                 {city}
@@ -125,21 +127,36 @@ export default function App() {
                 )}
             </div>
 
+            {/* Input fields for min and max price */}
+            <div className="flex justify-between w-full max-w-md mb-4">
+                <input
+                    type="number"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    placeholder="Min price £"
+                    className="w-1/2 p-2 mr-2 border border-gray-300 rounded-lg"
+                />
+                <input
+                    type="number"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    placeholder="Max price £"
+                    className="w-1/2 p-2 ml-2 border border-gray-300 rounded-lg"
+                />
+            </div>
+
             <button
                 onClick={handleFetch}
                 disabled={loading}
-                className={`px-4 py-2 bg-skyBBlue text-white rounded-lg w-full max-w-md transition duration-300 ${
-                    loading ? 'bg-blue-400 cursor-not-allowed' : 'hover:bg-blue-800'
-                }`}
+                className={`px-4 py-2 bg-skyBBlue text-white rounded-lg w-full max-w-md transition duration-300 ${loading ? 'bg-blue-400 cursor-not-allowed' : 'hover:bg-blue-800'}`}
             >
                 {loading ? 'Loading...' : 'Find a room'}
             </button>
             {error && <p className="mt-4 text-red-500">{error}</p>}
 
-            {/* Display images and room info after loading */}
             <div className="flex flex-col items-start gap-4 mt-6">
                 {listings.map((listing, index) => (
-                    <div key={listing._id} className="flex items-center w-full gap-1  bg-white shadow-md rounded-xl">
+                    <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
                             <img src={listing.image} alt={`Room ${index}`} className="shadow-lg rounded-lg w-48 h-28 md:w-28 object-cover" />
                         </a>
@@ -148,7 +165,7 @@ export default function App() {
                             <span className="text-black text-xs font-semibold ">{listing.title || 'No title available'}</span>
 
                             <span className="max-w-md text-xs text-black break-words">
-                                {expandedListings[index] 
+                                {expandedListings[index]
                                     ? listing.description || 'No description available'
                                     : (listing.description?.length > 100 ? listing.description.slice(0, 100) + '...' : listing.description)}
                             </span>
@@ -164,10 +181,10 @@ export default function App() {
 
                             <div className="flex items-center justify-between mr-2 ">
                                 <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
-                                <a 
-                                    href={listing.link} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
+                                <a
+                                    href={listing.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-skyBBlue text-xs font-semibold transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
                                 >
                                     See The Room
@@ -178,14 +195,12 @@ export default function App() {
                 ))}
             </div>
 
-            {/* Loading Indicator */}
             {loading && (
                 <div className="mt-4">
                     <div className="loader"></div> {/* Spinner */}
                 </div>
             )}
 
-            {/* Load More Button */}
             {!loading && listings.length > 0 && (
                 <button
                     onClick={handleLoadMore}
