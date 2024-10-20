@@ -14,7 +14,7 @@ export default function App() {
     const [expandedListings, setExpandedListings] = useState({}); // Tracks which listings are expanded
 
     const cities = [
-        'London', 'Birmingham', 'Manchester', 'Glasgow', 
+        'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
         'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
         'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
         'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
@@ -31,7 +31,7 @@ export default function App() {
         'Greenwich', 'Enfield', 'Haringey', 'Durham', 'Milton Keynes', 
         'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
         'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
-        'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
+        'Kirkcaldy', 'Wokingham', 'Camberley', 
         'Colchester', 'Dartford', 'Wellingborough','Kent'
     ];
 
