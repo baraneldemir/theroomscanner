@@ -135,7 +135,7 @@ export default function App() {
                             <img src={listing.image} alt={`Room ${index}`} className="shadow-lg rounded-lg w-48 h-28 md:w-28 object-cover" />
                         </a>
                         <div className='flex flex-col'>
-                            <span className="text-black text-xs">{listing.header || 'No headers available'}</span>
+                            <span className="text-black font-semibold">{listing.header || 'No headers available'}</span>
                             <span className="text-black text-xs font-semibold">{listing.title || 'No title available'}</span>
                             <span className="max-w-md text-xs leading-none text-black break-words">{listing.description || 'No description available'}</span>
 
