@@ -30,7 +30,7 @@ export default function App() {
         'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
         'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
         'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
-        'Colchester', 'Dartford', 'Wellingborough'
+        'Colchester', 'Dartford', 'Wellingborough','Kent'
     ];
 
     const fetchImages = async (location, page) => {
@@ -69,9 +69,12 @@ export default function App() {
         const inputValue = e.target.value;
         setSelectedCity(inputValue);
 
+        // Clear listings when user starts typing
+        setListings([]);
+
         // Filter cities based on input value
         if (inputValue) {
-            const filtered = cities.filter(city => 
+            const filtered = cities.filter(city =>
                 city.toLowerCase().includes(inputValue.toLowerCase())
             );
             setFilteredCities(filtered);
