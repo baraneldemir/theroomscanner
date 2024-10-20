@@ -11,26 +11,26 @@ export default function App() {
     const [filteredCities, setFilteredCities] = useState([]);
 
     const cities = [
-        'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
-        'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
-        'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
-        'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
-        'Leicester', 'Aberdeen', 'Brighton', 'Plymouth', 'Derby', 
-        'Swindon', 'Luton', 'Middlesbrough', 'Blackpool', 'Stockport', 
-        'Bolton', 'York', 'Cambridge', 'Swansea', 'Dundee', 
-        'Derry', 'Bournemouth', 'Exeter', 'Southampton', 'Inverness', 
-        'Gloucester', 'Wakefield', 'Falkirk', 'Chester', 'St Albans', 
-        'Slough', 'Lincoln', 'Hastings', 'Telford', 'Salisbury', 
-        'Dunfermline', 'Camden', 'Islington', 'Southwark', 'Bromley', 
-        'Tower Hamlets', 'Hackney', 'Brent', 'Ealing', 'Lambeth', 
-        'Wandsworth', 'Hammersmith and Fulham', 'Croydon', 'Newham', 
-        'Redbridge', 'Hounslow', 'Bexley', 'Barnet', 'Havering', 
-        'Greenwich', 'Enfield', 'Haringey', 'Durham', 'Milton Keynes', 
-        'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
-        'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
-        'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
-        'Colchester', 'Dartford', 'Wellingborough'
-    ];
+    'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
+    'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
+    'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
+    'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
+    'Leicester', 'Aberdeen', 'Brighton', 'Plymouth', 'Derby', 
+    'Swindon', 'Luton', 'Middlesbrough', 'Blackpool', 'Stockport', 
+    'Bolton', 'York', 'Cambridge', 'Swansea', 'Dundee', 
+    'Derry', 'Bournemouth', 'Exeter', 'Southampton', 'Inverness', 
+    'Gloucester', 'Wakefield', 'Falkirk', 'Chester', 'St Albans', 
+    'Slough', 'Lincoln', 'Hastings', 'Telford', 'Salisbury', 
+    'Dunfermline', 'Camden', 'Islington', 'Southwark', 'Bromley', 
+    'Tower Hamlets', 'Hackney', 'Brent', 'Ealing', 'Lambeth', 
+    'Wandsworth', 'Hammersmith and Fulham', 'Croydon', 'Newham', 
+    'Redbridge', 'Hounslow', 'Bexley', 'Barnet', 'Havering', 
+    'Greenwich', 'Enfield', 'Haringey', 'Durham', 'Milton Keynes', 
+    'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
+    'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
+    'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
+    'Colchester', 'Dartford', 'Wellingborough'
+];
     
 
     const fetchImages = async (location, page) => {
@@ -130,22 +130,22 @@ export default function App() {
             {/* Display images and room info after loading */}
             <div className="flex flex-col items-start gap-4 mt-6">
                 {listings.map((listing, index) => (
-                    <div key={listing._id} className="flex items-center w-full gap-4 p-5 bg-white shadow-md rounded-xl">
+                    <div key={listing._id} className="flex items-center w-full gap-1  bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
-                            <img src={listing.image} alt={`Room ${index}`} className="shadow-lg w-48 h-28 md:w-28" />
+                            <img src={listing.image} alt={`Room ${index}`} className="shadow-lg w-48 h-28 md:w-28 object-cover" />
                         </a>
                         <div className='flex flex-col'>
-                            <span className="text-black">{listing.header || 'No headers available'}</span>
-                            <span className="text-black">{listing.title || 'No title available'}</span>
-                            <span className="max-w-md text-xs leading-relaxed text-black break-words">{listing.description || 'No description available'}</span>
+                            <span className="text-black text-xs">{listing.header || 'No headers available'}</span>
+                            <span className="text-black text-xs font-semibold">{listing.title || 'No title available'}</span>
+                            <span className="max-w-md text-xs leading-none text-black break-words">{listing.description || 'No description available'}</span>
 
-                            <div className="flex items-center justify-between mt-4">
-                                <span className="text-xl font-bold text-black">{listing.price || 'No price available'}</span>
+                            <div className="flex items-center justify-between mr-2 ">
+                                <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
                                 <a 
                                     href={listing.link} 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
-                                    className="text-skyBBlue text-sm font-semibold transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
+                                    className="text-skyBBlue text-xs font-semibold transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
                                 >
                                     See The Room
                                 </a>
