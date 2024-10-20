@@ -81,7 +81,7 @@ export default function App() {
                     {images.map((image, index) => (
                         <div key={index} className="flex items-center w-full gap-4 p-5 bg-white shadow-md rounded-xl">
                             <a href={links[index]} target="_blank" rel="noopener noreferrer">
-                                <img src={image} alt={`Room ${index}`} className="rounded-lg shadow-lg w-28 h-28" />
+                                <img src={image} alt={`Room ${index}`} className="rounded-lg object-cover shadow-lg w-28 h-28" />
                             </a>
                             <div className='flex flex-col'>
                                 <span className="text-black">{headers[index] || 'No headers available'}</span>
