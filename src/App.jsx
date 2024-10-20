@@ -132,7 +132,7 @@ export default function App() {
                 {listings.map((listing, index) => (
                     <div key={listing._id} className="flex items-center w-full gap-1  bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
-                            <img src={listing.image} alt={`Room ${index}`} className="shadow-lg w-48 h-28 md:w-28 object-cover" />
+                            <img src={listing.image} alt={`Room ${index}`} className="shadow-lg rounded-lg w-48 h-28 md:w-28 object-cover" />
                         </a>
                         <div className='flex flex-col'>
                             <span className="text-black text-xs">{listing.header || 'No headers available'}</span>
