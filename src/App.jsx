@@ -8,6 +8,7 @@ export default function App() {
     const [error, setError] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [filteredCities, setFilteredCities] = useState([]);
 
     const cities = [
         'London',
@@ -94,22 +95,54 @@ export default function App() {
         setCurrentPage(nextPage);
         fetchImages(selectedCity, nextPage);
     };
+    const handleCityChange = (e) => {
+        const inputValue = e.target.value;
+        setSelectedCity(inputValue);
+
+        // Filter cities based on input value
+        if (inputValue) {
+            const filtered = cities.filter(city => 
+                city.toLowerCase().includes(inputValue.toLowerCase())
+            );
+            setFilteredCities(filtered);
+        } else {
+            setFilteredCities([]);
+        }
+    };
+
+    const handleCitySelect = (city) => {
+        setSelectedCity(city);
+        setFilteredCities([]); // Clear the suggestions after selecting a city
+    };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-skyBack">
             <h1 className="mb-4 text-3xl font-bold text-white">RoomScanner</h1>
 
-            {/* Dropdown for selecting city */}
-            <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full max-w-md p-2 mb-4 border border-gray-300 rounded-lg"
-            >
-                <option value="" disabled>Select a city</option>
-                {cities.map((city, index) => (
-                    <option key={index} value={city}>{city}</option>
-                ))}
-            </select>
+            {/* Input for selecting city */}
+            <div className="relative w-full max-w-md mb-4">
+                <input
+                    type="text"
+                    value={selectedCity}
+                    onChange={handleCityChange}
+                    placeholder="Select a city"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+                {/* Dropdown list for suggestions */}
+                {filteredCities.length > 0 && (
+                    <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+                        {filteredCities.map((city, index) => (
+                            <li 
+                                key={index} 
+                                onClick={() => handleCitySelect(city)} 
+                                className="p-2 cursor-pointer hover:bg-gray-200"
+                            >
+                                {city}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
 
             <button
                 onClick={handleFetch}
