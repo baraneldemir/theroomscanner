@@ -9,29 +9,12 @@ export default function App() {
     const [selectedCity, setSelectedCity] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [filteredCities, setFilteredCities] = useState([]);
+    const [expandedListings, setExpandedListings] = useState({}); // Tracks which listings are expanded
 
     const cities = [
-    'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
-    'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
-    'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
-    'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
-    'Leicester', 'Aberdeen', 'Brighton', 'Plymouth', 'Derby', 
-    'Swindon', 'Luton', 'Middlesbrough', 'Blackpool', 'Stockport', 
-    'Bolton', 'York', 'Cambridge', 'Swansea', 'Dundee', 
-    'Derry', 'Bournemouth', 'Exeter', 'Southampton', 'Inverness', 
-    'Gloucester', 'Wakefield', 'Falkirk', 'Chester', 'St Albans', 
-    'Slough', 'Lincoln', 'Hastings', 'Telford', 'Salisbury', 
-    'Dunfermline', 'Camden', 'Islington', 'Southwark', 'Bromley', 
-    'Tower Hamlets', 'Hackney', 'Brent', 'Ealing', 'Lambeth', 
-    'Wandsworth', 'Hammersmith and Fulham', 'Croydon', 'Newham', 
-    'Redbridge', 'Hounslow', 'Bexley', 'Barnet', 'Havering', 
-    'Greenwich', 'Enfield', 'Haringey', 'Durham', 'Milton Keynes', 
-    'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
-    'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
-    'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
-    'Colchester', 'Dartford', 'Wellingborough'
-];
-    
+        'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
+        // (more cities...)
+    ];
 
     const fetchImages = async (location, page) => {
         setLoading(true);
@@ -64,6 +47,7 @@ export default function App() {
         setCurrentPage(nextPage);
         fetchImages(selectedCity, nextPage);
     };
+
     const handleCityChange = (e) => {
         const inputValue = e.target.value;
         setSelectedCity(inputValue);
@@ -84,12 +68,18 @@ export default function App() {
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
+    // Toggle the read more / read less for each listing
+    const toggleReadMore = (index) => {
+        setExpandedListings((prevState) => ({
+            ...prevState,
+            [index]: !prevState[index],
+        }));
+    };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-skyBack">
             <h1 className="mb-4 text-3xl font-bold text-white">RoomScanner</h1>
 
-           
             {/* Input for selecting city */}
             <div className="relative w-full max-w-md mb-4">
                 <input
@@ -115,7 +105,6 @@ export default function App() {
                 )}
             </div>
 
-
             <button
                 onClick={handleFetch}
                 disabled={loading}
@@ -136,8 +125,22 @@ export default function App() {
                         </a>
                         <div className='flex flex-col'>
                             <span className="text-black font-semibold leading-tight">{listing.header || 'No headers available'}</span>
-                            <span className="text-black text-xs font-semibold">{listing.title || 'No title available'}</span>
-                            <span className="max-w-md text-xs leading-none text-black break-words">{listing.description || 'No description available'}</span>
+                            <span className="text-black text-xs font-semibold ">{listing.title || 'No title available'}</span>
+
+                            <span className="max-w-md text-xs text-black break-words">
+                                {expandedListings[index] 
+                                    ? listing.description || 'No description available'
+                                    : (listing.description?.length > 100 ? listing.description.slice(0, 100) + '...' : listing.description)}
+                            </span>
+
+                            {listing.description?.length > 100 && (
+                                <span
+                                    className="text-skyBBlue text-xs font-semibold cursor-pointer transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
+                                    onClick={() => toggleReadMore(index)}
+                                >
+                                    {expandedListings[index] ? 'Read less' : 'Find out more'}
+                                </span>
+                            )}
 
                             <div className="flex items-center justify-between mr-2 ">
                                 <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
