@@ -13,7 +13,24 @@ export default function App() {
 
     const cities = [
         'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
-        // (more cities...)
+        'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
+        'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
+        'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
+        'Leicester', 'Aberdeen', 'Brighton', 'Plymouth', 'Derby', 
+        'Swindon', 'Luton', 'Middlesbrough', 'Blackpool', 'Stockport', 
+        'Bolton', 'York', 'Cambridge', 'Swansea', 'Dundee', 
+        'Derry', 'Bournemouth', 'Exeter', 'Southampton', 'Inverness', 
+        'Gloucester', 'Wakefield', 'Falkirk', 'Chester', 'St Albans', 
+        'Slough', 'Lincoln', 'Hastings', 'Telford', 'Salisbury', 
+        'Dunfermline', 'Camden', 'Islington', 'Southwark', 'Bromley', 
+        'Tower Hamlets', 'Hackney', 'Brent', 'Ealing', 'Lambeth', 
+        'Wandsworth', 'Hammersmith and Fulham', 'Croydon', 'Newham', 
+        'Redbridge', 'Hounslow', 'Bexley', 'Barnet', 'Havering', 
+        'Greenwich', 'Enfield', 'Haringey', 'Durham', 'Milton Keynes', 
+        'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
+        'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
+        'Farnborough', 'Kirkcaldy', 'Wokingham', 'Camberley', 
+        'Colchester', 'Dartford', 'Wellingborough'
     ];
 
     const fetchImages = async (location, page) => {
