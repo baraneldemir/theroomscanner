@@ -37,12 +37,15 @@ export default function App() {
 
     const fetchImages = async (location, page) => {
         setLoading(true);
-        setError('');
-    
+        setError(''); // Clear error message at the start
+
         try {
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}/${page}`, {
                 params: { minPrice, maxPrice } // Pass minPrice and maxPrice as query params
             });
+            if (response.data.length === 0) {
+                setError('No rooms found in that price range.'); // Set error if no listings returned
+            }
             setListings(prevListings => [...prevListings, ...response.data]); // Append new listings
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -155,9 +158,7 @@ export default function App() {
             {error && <p className="mt-4 text-red-500">{error}</p>}
 
             <div className="flex flex-col items-start gap-4 mt-6">
-                {listings.length === 0 && !loading && (
-                    <p className="text-red-500">No rooms found in that price range.</p> // Message when no listings are available
-                )}
+                
                 {listings.map((listing, index) => (
                     <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
