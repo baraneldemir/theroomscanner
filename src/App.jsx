@@ -14,7 +14,7 @@ export default function App() {
     const [expandedListings, setExpandedListings] = useState({}); // Tracks which listings are expanded
 
     const cities = [
-        'Ross-on-Wye', 'London', 'Birmingham', 'Manchester', 'Glasgow', 
+        'London', 'Birmingham', 'Manchester', 'Glasgow', 
         'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
         'Cardiff', 'Nottingham', 'Coventry', 'Bradford', 'Belfast', 
         'Stoke-on-Trent', 'Wolverhampton', 'Sunderland', 'Portsmouth', 
