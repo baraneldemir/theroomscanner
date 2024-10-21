@@ -32,7 +32,7 @@ export default function App() {
         'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
         'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
         'Kirkcaldy', 'Wokingham', 'Camberley', 
-        'Colchester', 'Dartford', 'Wellingborough','Kent'
+        'Colchester', 'Dartford', 'Wellingborough','Kent', 
     ];
 
     const fetchImages = async (location, page) => {
@@ -43,10 +43,13 @@ export default function App() {
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}/${page}`, {
                 params: { minPrice, maxPrice } // Pass minPrice and maxPrice as query params
             });
+
             if (response.data.length === 0) {
                 setError('No rooms found in that price range.'); // Set error if no listings returned
             }
-            setListings(prevListings => [...prevListings, ...response.data]); // Append new listings
+
+            // Append new listings to the existing list
+            setListings(prevListings => [...prevListings, ...response.data]);
         } catch (error) {
             console.error("Error fetching data:", error);
             setError(error.response?.data?.error || 'Failed to load rooms :(');
@@ -55,23 +58,28 @@ export default function App() {
         }
     };
 
+    // Handle search when user selects a city and price range
     const handleFetch = () => {
         if (!selectedCity || !cities.includes(selectedCity)) {
             setError('Please select a valid city from the dropdown.');
             return;
         }
+
         // Reset listings only for a new search
-        setListings([]); 
-        // setCurrentPage(1); // Start from page 1 for a new city
+        setListings([]);
+        setCurrentPage(1); // Start from page 1 for a new city
+
         fetchImages(selectedCity, 1); // Fetch the first page of data
     };
-    
+
+    // Handle load more for pagination
     const handleLoadMore = () => {
         const nextPage = currentPage + 1; // Increment the current page
         setCurrentPage(nextPage);
         fetchImages(selectedCity, nextPage); // Fetch the next page
     };
 
+    // Handle city input change and filter
     const handleCityChange = (e) => {
         const inputValue = e.target.value;
         setSelectedCity(inputValue);
@@ -90,11 +98,13 @@ export default function App() {
         }
     };
 
+    // Handle selecting a city from the dropdown
     const handleCitySelect = (city) => {
         setSelectedCity(city);
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
+    // Handle expanding or collapsing the listing's description
     const toggleReadMore = (index) => {
         setExpandedListings((prevState) => ({
             ...prevState,
@@ -148,6 +158,7 @@ export default function App() {
                 />
             </div>
 
+            {/* Button for initiating the search */}
             <button
                 onClick={handleFetch}
                 disabled={loading}
@@ -157,16 +168,16 @@ export default function App() {
             </button>
             {error && <p className="mt-4 text-red-500">{error}</p>}
 
+            {/* Display the room listings */}
             <div className="flex flex-col items-start gap-4 mt-6">
-                
                 {listings.map((listing, index) => (
                     <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
-                            <img src={listing.image} alt={`Room ${index}`} className="shadow-lg rounded-lg w-48 h-28 md:w-28 object-cover" />
+                            <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg shadow-lg h-28 md:w-28" />
                         </a>
                         <div className='flex flex-col'>
-                            <span className="text-black font-semibold leading-tight">{listing.header || 'No headers available'}</span>
-                            <span className="text-black text-xs font-semibold ">{listing.title || 'No title available'}</span>
+                            <span className="font-semibold leading-tight text-black">{listing.header || 'No headers available'}</span>
+                            <span className="text-xs font-semibold text-black">{listing.title || 'No title available'}</span>
 
                             <span className="max-w-md text-xs text-black break-words">
                                 {expandedListings[index]
@@ -176,20 +187,20 @@ export default function App() {
 
                             {listing.description?.length > 100 && (
                                 <span
-                                    className="text-skyBBlue text-xs font-semibold cursor-pointer transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
+                                    className="text-xs font-semibold transition-all duration-300 ease-in-out cursor-pointer text-skyBBlue hover:text-sky-600 hover:underline"
                                     onClick={() => toggleReadMore(index)}
                                 >
                                     {expandedListings[index] ? 'Read less' : 'Find out more'}
                                 </span>
                             )}
 
-                            <div className="flex items-center justify-between mr-2 ">
+                            <div className="flex items-center justify-between mr-2">
                                 <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
                                 <a
                                     href={listing.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-skyBBlue text-xs font-semibold transition-all duration-300 ease-in-out hover:text-sky-600 hover:underline"
+                                    className="text-xs font-semibold transition-all duration-300 ease-in-out text-skyBBlue hover:text-sky-600 hover:underline"
                                 >
                                     See The Room
                                 </a>
@@ -199,16 +210,18 @@ export default function App() {
                 ))}
             </div>
 
+            {/* Loader while fetching */}
             {loading && (
                 <div className="mt-4">
                     <div className="loader"></div> {/* Spinner */}
                 </div>
             )}
 
+            {/* Load more button */}
             {!loading && listings.length > 0 && (
                 <button
                     onClick={handleLoadMore}
-                    className="mt-4 px-4 py-2 bg-skyBBlue text-white rounded-lg"
+                    className="px-4 py-2 mt-4 text-white rounded-lg bg-skyBBlue"
                 >
                     Load More
                 </button>
