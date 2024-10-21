@@ -32,7 +32,7 @@ export default function App() {
         'Salford', 'Aberystwyth', 'Peterborough', 'Lichfield', 
         'Maidstone', 'Basingstoke', 'Woking', 'Rugby', 'Dudley', 
         'Kirkcaldy', 'Wokingham', 'Camberley', 
-        'Colchester', 'Dartford', 'Wellingborough','Kent', 
+        'Colchester', 'Dartford', 'Wellingborough','Kent'
     ];
 
     const fetchImages = async (location, page) => {
@@ -43,13 +43,10 @@ export default function App() {
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-images/${location}/${page}`, {
                 params: { minPrice, maxPrice } // Pass minPrice and maxPrice as query params
             });
-
             if (response.data.length === 0) {
                 setError('No rooms found in that price range.'); // Set error if no listings returned
             }
-
-            // Append new listings to the existing list
-            setListings(prevListings => [...prevListings, ...response.data]);
+            setListings(prevListings => [...prevListings, ...response.data]); // Append new listings
         } catch (error) {
             console.error("Error fetching data:", error);
             setError(error.response?.data?.error || 'Failed to load rooms :(');
@@ -58,28 +55,23 @@ export default function App() {
         }
     };
 
-    // Handle search when user selects a city and price range
     const handleFetch = () => {
         if (!selectedCity || !cities.includes(selectedCity)) {
             setError('Please select a valid city from the dropdown.');
             return;
         }
-
         // Reset listings only for a new search
-        setListings([]);
-        setCurrentPage(1); // Start from page 1 for a new city
-
+        setListings([]); 
+        // setCurrentPage(1); // Start from page 1 for a new city
         fetchImages(selectedCity, 1); // Fetch the first page of data
     };
-
-    // Handle load more for pagination
+    
     const handleLoadMore = () => {
         const nextPage = currentPage + 1; // Increment the current page
         setCurrentPage(nextPage);
         fetchImages(selectedCity, nextPage); // Fetch the next page
     };
 
-    // Handle city input change and filter
     const handleCityChange = (e) => {
         const inputValue = e.target.value;
         setSelectedCity(inputValue);
@@ -98,13 +90,11 @@ export default function App() {
         }
     };
 
-    // Handle selecting a city from the dropdown
     const handleCitySelect = (city) => {
         setSelectedCity(city);
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
-    // Handle expanding or collapsing the listing's description
     const toggleReadMore = (index) => {
         setExpandedListings((prevState) => ({
             ...prevState,
@@ -143,6 +133,7 @@ export default function App() {
             {/* Input fields for min and max price */}
             <div className="flex justify-between w-full max-w-md mb-4">
                 <input
+                    disabled
                     type="number"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
@@ -150,6 +141,7 @@ export default function App() {
                     className="w-1/2 p-2 mr-2 border border-gray-300 rounded-lg"
                 />
                 <input
+                    disabled
                     type="number"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
@@ -158,7 +150,6 @@ export default function App() {
                 />
             </div>
 
-            {/* Button for initiating the search */}
             <button
                 onClick={handleFetch}
                 disabled={loading}
@@ -168,8 +159,8 @@ export default function App() {
             </button>
             {error && <p className="mt-4 text-red-500">{error}</p>}
 
-            {/* Display the room listings */}
             <div className="flex flex-col items-start gap-4 mt-6">
+                
                 {listings.map((listing, index) => (
                     <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
@@ -177,7 +168,7 @@ export default function App() {
                         </a>
                         <div className='flex flex-col'>
                             <span className="font-semibold leading-tight text-black">{listing.header || 'No headers available'}</span>
-                            <span className="text-xs font-semibold text-black">{listing.title || 'No title available'}</span>
+                            <span className="text-xs font-semibold text-black ">{listing.title || 'No title available'}</span>
 
                             <span className="max-w-md text-xs text-black break-words">
                                 {expandedListings[index]
@@ -194,7 +185,7 @@ export default function App() {
                                 </span>
                             )}
 
-                            <div className="flex items-center justify-between mr-2">
+                            <div className="flex items-center justify-between mr-2 ">
                                 <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
                                 <a
                                     href={listing.link}
@@ -210,14 +201,12 @@ export default function App() {
                 ))}
             </div>
 
-            {/* Loader while fetching */}
             {loading && (
                 <div className="mt-4">
                     <div className="loader"></div> {/* Spinner */}
                 </div>
             )}
 
-            {/* Load more button */}
             {!loading && listings.length > 0 && (
                 <button
                     onClick={handleLoadMore}
