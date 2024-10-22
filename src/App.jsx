@@ -62,7 +62,7 @@ export default function App() {
         }
         // Reset listings only for a new search
         setListings([]); 
-        // setCurrentPage(1); // Start from page 1 for a new city
+        setCurrentPage(1); // Start from page 1 for a new city
         fetchImages(selectedCity, 1); // Fetch the first page of data
     };
     
@@ -78,6 +78,7 @@ export default function App() {
 
         // Clear listings when user starts typing
         setListings([]);
+        setCurrentPage(1);
 
         // Filter cities based on input value
         if (inputValue) {
@@ -92,6 +93,9 @@ export default function App() {
 
     const handleCitySelect = (city) => {
         setSelectedCity(city);
+        setCurrentPage(1);
+        setListings([]);
+        fetchImages(city, 1);
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
@@ -162,12 +166,12 @@ export default function App() {
             <div className="flex flex-col items-start gap-4 mt-6">
                 
                 {listings.map((listing, index) => (
-                    <div key={listing._id} className="flex items-center w-full gap-1 bg-white shadow-md rounded-xl">
+                    <div key={listing._id} className="flex items-center w-full gap-1 p-2 bg-white shadow-md rounded-xl">
                         <a href={listing.link} target="_blank" rel="noopener noreferrer">
-                            <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg shadow-lg h-28 md:w-28" />
+                            <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg h-28 md:w-28" />
                         </a>
                         <div className='flex flex-col'>
-                            <span className="font-semibold leading-tight text-black">{listing.header || 'No headers available'}</span>
+                            <span className="mb-2 text-sm font-semibold leading-none text-black">{listing.header || 'No headers available'}</span>
                             <span className="text-xs font-semibold text-black ">{listing.title || 'No title available'}</span>
 
                             <span className="max-w-md text-xs text-black break-words">
