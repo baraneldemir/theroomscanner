@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import DescriptionModal from './components/DescriptionModal';
 
 export default function App() {
     const [listings, setListings] = useState([]);
@@ -11,8 +12,8 @@ export default function App() {
     const [filteredCities, setFilteredCities] = useState([]);
     const [minPrice, setMinPrice] = useState(''); // New state for min price
     const [maxPrice, setMaxPrice] = useState(''); // New state for max price
-    const [expandedListings, setExpandedListings] = useState({}); // Tracks which listings are expanded
-
+    const [expandedListing, setExpandedListing] = useState(null); // Add state for the selected expanded listing
+    const [modalCoordinates, setModalCoordinates] = useState({ x: 0, y: 0 });
     const cities = [
         'London', 'Birmingham', 'Manchester', 'Glasgow', 
         'Liverpool', 'Newcastle', 'Sheffield', 'Bristol', 'Leeds', 
@@ -99,12 +100,16 @@ export default function App() {
         setFilteredCities([]); // Clear the suggestions after selecting a city
     };
 
-    const toggleReadMore = (index) => {
-        setExpandedListings((prevState) => ({
-            ...prevState,
-            [index]: !prevState[index],
-        }));
+    const handleReadMore = (listing, event) => {
+        const { clientX, clientY } = event; // Get click coordinates
+        setModalCoordinates({ x: clientX, y: clientY }); // Set modal position
+        setExpandedListing(listing); // Show the selected listing in modal
     };
+    const handleCloseModal = () => {
+        setExpandedListing(null); // Close modal
+    };
+
+    
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-skyBack">
@@ -171,23 +176,24 @@ export default function App() {
                             <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg h-28 md:w-28" />
                         </a>
                         <div className='flex flex-col'>
-                            <span className="mb-2 text-sm font-semibold leading-none text-black">{listing.header || 'No headers available'}</span>
-                            <span className="text-xs font-semibold text-black ">{listing.title || 'No title available'}</span>
-
-                            <span className="max-w-md text-xs text-black break-words">
-                                {expandedListings[index]
-                                    ? listing.description || 'No description available'
-                                    : (listing.description?.length > 100 ? listing.description.slice(0, 100) + '...' : listing.description)}
+                            <span className="my-1 text-sm font-semibold leading-none text-black">{listing.header || 'No headers available'}</span>
+                            <span className="text-xs font-semibold text-black ">
+                            {listing.title?.length > 30 ? listing.title.slice(0, 30) + '...' : listing.title}
                             </span>
+                            <span className="max-w-md text-xs text-black break-words">
+                                {listing.description?.length > 60 ? listing.description.slice(0, 60) + '...' : listing.description}
+                            </span>
+
 
                             {listing.description?.length > 100 && (
                                 <span
                                     className="text-xs font-semibold transition-all duration-300 ease-in-out cursor-pointer text-skyBBlue hover:text-sky-600 hover:underline"
-                                    onClick={() => toggleReadMore(index)}
+                                    onClick={(e) => handleReadMore(listing, e)}
                                 >
-                                    {expandedListings[index] ? 'Read less' : 'Find out more'}
+                                   Read More
                                 </span>
                             )}
+
 
                             <div className="flex items-center justify-between mr-2 ">
                                 <span className="text-xs font-bold text-black">{listing.price || 'No price available'}</span>
@@ -219,6 +225,14 @@ export default function App() {
                     Load More
                 </button>
             )}
+            <DescriptionModal
+                show={!!expandedListing}
+                onClose={handleCloseModal}
+                title={expandedListing?.title}
+                description={expandedListing?.description}
+                x={modalCoordinates.x}
+                y={modalCoordinates.y}
+            />
         </div>
     );
 }
