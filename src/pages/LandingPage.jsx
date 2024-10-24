@@ -10,6 +10,8 @@ export default function LandingPage() {
     const [filteredCities, setFilteredCities] = useState([]);
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+    const [photos, setPhotos] = useState([]);
+    const [initialPhotos, setInitialPhotos] = useState(false); // To track if photos have been fetched
 
 
     const cities = [
@@ -154,7 +156,8 @@ export default function LandingPage() {
                             link: listing.link, 
                             title: listing.title, 
                             header: listing.header, 
-                            description: listing.description
+                            description: listing.description,
+                            photos: listing.photos
                         }}>
                             <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg h-28" />
                         </Link>
@@ -176,7 +179,8 @@ export default function LandingPage() {
                                         link: listing.link, 
                                         title: listing.title, 
                                         header: listing.header, 
-                                        description: listing.description
+                                        description: listing.description,
+                                        photos: listing.photos
                                     }}
                                     className="px-3 py-1 text-xs text-white rounded-lg bg-skyBBlue"
                                 >

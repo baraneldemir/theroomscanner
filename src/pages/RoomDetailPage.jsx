@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import './RoomDetailPage.css';
-import { Link } from 'react-router-dom';
-
 
 // Spinner component
 const Spinner = () => (
@@ -11,7 +9,6 @@ const Spinner = () => (
         <div className="loader"></div>
     </div>
 );
-
 
 // Modal component for viewing the full-size photo
 const PhotoModal = ({ isOpen, photo, onClose }) => {
@@ -27,25 +24,25 @@ const PhotoModal = ({ isOpen, photo, onClose }) => {
 
 const RoomDetailPage = () => {
     const location = useLocation();
-    const { link, title, header } = location.state || {}; // Get the link from location state
-    const [photos, setPhotos] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { link, title, header, photos: initialPhotos } = location.state || {}; // Get the photos from location.state
+    const [photos, setPhotos] = useState(initialPhotos || []); // Initialize with passed photos or empty
+    const [loading, setLoading] = useState(!initialPhotos); // Only set loading if no initial photos
     const [error, setError] = useState(null);
     const [modalPhoto, setModalPhoto] = useState(null); // State for the modal photo
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
     useEffect(() => {
-        if (link) {
+        if (!initialPhotos && link) {
             fetchPhotos(link);
         }
-    }, [link]);
+    }, [link, initialPhotos]);
 
     const fetchPhotos = async (link) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/scrape-photos`, {
                 params: { link },
             });
-            setPhotos(response.data);
+            setPhotos(response.data.map(photo => photo.photoUrl)); // Extract photoUrl from each object
             setLoading(false);
         } catch (error) {
             console.error("Error fetching photos:", error);
@@ -66,8 +63,8 @@ const RoomDetailPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-skyBack">
-             <h1 className="my-4 text-3xl font-bold text-center text-white">{header}</h1>
-             <h2 className="mb-4 text-xl font-bold text-white">{title}</h2>
+            <h1 className="my-4 text-3xl font-bold text-center text-white">{header}</h1>
+            <h2 className="mb-4 text-xl font-bold text-white">{title}</h2>
             {loading ? <Spinner /> : error ? (
                 <p className="text-red-500">{error}</p>
             ) : photos.length > 0 ? (
@@ -92,7 +89,6 @@ const RoomDetailPage = () => {
                 <div>Go Back to Listings</div>
             </Link>
         </div>
-        
     );
 };
 
