@@ -157,7 +157,7 @@ export default function LandingPage() {
                             title: listing.title, 
                             header: listing.header, 
                             description: listing.description,
-                            photos: listing.photos
+                            
                         }}>
                             <img src={listing.image} alt={`Room ${index}`} className="object-cover w-48 rounded-lg h-28" />
                         </Link>
@@ -180,7 +180,7 @@ export default function LandingPage() {
                                         title: listing.title, 
                                         header: listing.header, 
                                         description: listing.description,
-                                        photos: listing.photos
+                                        
                                     }}
                                     className="px-3 py-1 text-xs text-white rounded-lg bg-skyBBlue"
                                 >
